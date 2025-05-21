@@ -5,7 +5,7 @@ services:
     image: mysql:8.0.30-debian
     container_name: springboot-mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=ROOT
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=api-order
     ports:
       - 3308:3306
@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/nestjs-api
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/api-order
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     restart: on-failure
