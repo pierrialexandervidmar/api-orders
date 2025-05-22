@@ -33,5 +33,4 @@ public class CreateOrderDto implements Serializable {
         this.cardHash = cardHash;
     }
 
-
 }

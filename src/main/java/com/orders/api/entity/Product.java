@@ -14,7 +14,6 @@ public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Column(nullable = false)
@@ -36,6 +35,13 @@ public class Product implements Serializable {
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
     }
 
     public UUID getId() {
