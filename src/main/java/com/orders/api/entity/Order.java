@@ -4,6 +4,7 @@ import com.orders.api.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private double total;
+    private BigDecimal total;
 
     @Column(name = "client_id")
     private Long clientId;
@@ -45,11 +46,11 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
@@ -83,6 +84,12 @@ public class Order implements Serializable {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public BigDecimal calculateTotal() {
+        return this.items.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
