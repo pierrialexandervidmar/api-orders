@@ -1,7 +1,6 @@
 package com.orders.api.dto;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class OrderItemResponse {
     private Long id;

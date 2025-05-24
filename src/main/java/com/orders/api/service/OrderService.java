@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 /**
  * Classe de serviço responsável por gerenciar as operações relacionadas a Pedidos.
- *
+ * <p>
  * Author: Pierri Alexander Vidmar
  * Since: 05/2025
  */
@@ -44,7 +44,7 @@ public class OrderService {
     /**
      * Construtor para injeção de dependências.
      *
-     * @param orderRepository Repositório para a entidade Order.
+     * @param orderRepository   Repositório para a entidade Order.
      * @param productRepository Repositório para a entidade Product.
      */
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
@@ -89,12 +89,12 @@ public class OrderService {
      *
      * @param orderId UUID do pedido a ser pago.
      * @return O pedido atualizado com status PAID.
-     * @throws IllegalStateException Se o pedido não estiver no status PENDING.
+     * @throws IllegalStateException   Se o pedido não estiver no status PENDING.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
     public Order pay(String orderId) {
         Order order = findById(orderId);
-        if(order.getStatus() != OrderStatus.PENDING){
+        if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalStateException("O pedido não pode ser pago");
         }
         order.setStatus(OrderStatus.PAID);
@@ -107,12 +107,12 @@ public class OrderService {
      *
      * @param orderId UUID do pedido a ser marcado como falhado.
      * @return O pedido atualizado com status FAILED.
-     * @throws IllegalStateException Se o pedido não estiver no status PENDING.
+     * @throws IllegalStateException   Se o pedido não estiver no status PENDING.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
     public Order fail(String orderId) {
         Order order = findById(orderId);
-        if(order.getStatus() != OrderStatus.PENDING){
+        if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalStateException("O pedido não pode ser marcado como falhado");
         }
         order.setStatus(OrderStatus.FAILED);

@@ -1,19 +1,27 @@
 package com.orders.api.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 public class CreateOrderDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotBlank(message = "Campo de cliente é obrigatório")
     private String clientId;
 
+    @NotNull(message = "Itens obrigatórios")
+    @NotEmpty(message = "A lista de itens não pode estar vazia")
     private List<OrderItemDto> items;
+
     private String cardHash;
 
-    public CreateOrderDto() {}
+    public CreateOrderDto() {
+    }
 
     public CreateOrderDto(String clientId, List<OrderItemDto> items, String cardHash) {
         this.clientId = clientId;

@@ -4,11 +4,11 @@ import com.orders.api.dto.CreateOrderDto;
 import com.orders.api.dto.OrderResponse;
 import com.orders.api.entity.Order;
 import com.orders.api.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -22,7 +22,7 @@ public class OrderResource {
     }
 
     @PostMapping
-    public Order create(@RequestBody CreateOrderDto createOrderDto) {
+    public Order create(@Valid @RequestBody CreateOrderDto createOrderDto) {
         return orderService.create(createOrderDto);
     }
 

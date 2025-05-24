@@ -3,6 +3,7 @@ package com.orders.api.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,13 +15,15 @@ public class OrderItemDto implements Serializable {
     @Min(1)
     private int quantity;
 
-    @NotBlank
+    @NotBlank(message = "Campo obrigatório")
     private String productId;
 
     @NotNull
+    @Positive(message = "Preço deve ser um valor positivo")
     private BigDecimal price;
 
-    public OrderItemDto() {}
+    public OrderItemDto() {
+    }
 
     public OrderItemDto(int quantity, String productId, BigDecimal price) {
         this.quantity = quantity;

@@ -29,7 +29,8 @@ public class Product implements Serializable {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String name, String description, BigDecimal price, String imageUrl) {
         this.name = name;

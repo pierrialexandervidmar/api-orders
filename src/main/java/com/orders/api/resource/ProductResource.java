@@ -2,12 +2,12 @@ package com.orders.api.resource;
 
 import com.orders.api.entity.Product;
 import com.orders.api.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -22,7 +22,7 @@ public class ProductResource {
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product createProductDto) {
+    public ResponseEntity<Product> create(@Valid @RequestBody Product createProductDto) {
         Product createdProduct = productService.create(createProductDto);
         return ResponseEntity.ok(createdProduct);
     }
@@ -44,7 +44,7 @@ public class ProductResource {
 
     // UPDATE
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product updateProductDto) {
+    public ResponseEntity<Product> update(@PathVariable String id, @Valid @RequestBody Product updateProductDto) {
         try {
             Product updatedProduct = productService.update(id, updateProductDto);
             return ResponseEntity.ok(updatedProduct);
