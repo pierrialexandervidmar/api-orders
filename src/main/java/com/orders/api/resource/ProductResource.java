@@ -36,7 +36,7 @@ public class ProductResource {
 
     // FIND ONE
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findOne(@PathVariable UUID id) {
+    public ResponseEntity<Product> findOne(@PathVariable String id) {
         return productService.findOne(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class ProductResource {
 
     // UPDATE
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable UUID id, @RequestBody Product updateProductDto) {
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product updateProductDto) {
         try {
             Product updatedProduct = productService.update(id, updateProductDto);
             return ResponseEntity.ok(updatedProduct);
@@ -55,7 +55,7 @@ public class ProductResource {
 
     // DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable UUID id) {
+    public ResponseEntity<Void> remove(@PathVariable String id) {
         productService.remove(id);
         return ResponseEntity.noContent().build();
     }

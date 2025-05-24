@@ -1,5 +1,6 @@
 package com.orders.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.orders.api.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -17,12 +19,13 @@ public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(length = 36)
     private String id;
 
     private BigDecimal total;
 
-    @Column(name = "client_id")
-    private Long clientId;
+    @Column(name = "client_id", length = 36)
+    private String clientId;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
@@ -31,10 +34,14 @@ public class Order implements Serializable {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderItem> items;
 
     @PrePersist
     public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
         this.createdAt = LocalDateTime.now();
     }
 
@@ -54,11 +61,11 @@ public class Order implements Serializable {
         this.total = total;
     }
 
-    public Long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(Long clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 

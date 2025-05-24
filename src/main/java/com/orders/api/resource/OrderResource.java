@@ -1,6 +1,7 @@
 package com.orders.api.resource;
 
 import com.orders.api.dto.CreateOrderDto;
+import com.orders.api.dto.OrderResponse;
 import com.orders.api.entity.Order;
 import com.orders.api.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,15 @@ public class OrderResource {
         this.orderService = orderService;
     }
 
-//    @PostMapping
-//    public Order create(@RequestBody CreateOrderDto createOrderDto) {
-//        return orderService.create(createOrderDto);
-//    }
-//
-//    @GetMapping
-//    public List<Order> findAll() {
-//        return orderService.findAll();
-//    }
+    @PostMapping
+    public Order create(@RequestBody CreateOrderDto createOrderDto) {
+        return orderService.create(createOrderDto);
+    }
+
+    @GetMapping
+    public List<OrderResponse> findAll() {
+        return orderService.findAll();
+    }
 //
 //    @GetMapping("/{id}")
 //    public Order findOne(@PathVariable UUID id) {

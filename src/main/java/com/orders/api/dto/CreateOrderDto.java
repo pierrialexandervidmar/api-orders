@@ -2,19 +2,20 @@ package com.orders.api.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 public class CreateOrderDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long clientId;
+    private String clientId;
 
     private List<OrderItemDto> items;
     private String cardHash;
 
     public CreateOrderDto() {}
 
-    public CreateOrderDto(Long clientId, List<OrderItemDto> items, String cardHash) {
+    public CreateOrderDto(String clientId, List<OrderItemDto> items, String cardHash) {
         this.clientId = clientId;
         this.items = items;
         this.cardHash = cardHash;
@@ -36,11 +37,11 @@ public class CreateOrderDto implements Serializable {
         this.cardHash = cardHash;
     }
 
-    public Long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(Long clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 }

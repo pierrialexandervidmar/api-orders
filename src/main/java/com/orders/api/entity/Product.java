@@ -14,7 +14,8 @@ public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private UUID id;
+    @Column(length = 36)
+    private String id;
 
     @Column(nullable = false)
     private String name;
@@ -40,15 +41,15 @@ public class Product implements Serializable {
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
-            this.id = UUID.randomUUID();
+            this.id = UUID.randomUUID().toString();
         }
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

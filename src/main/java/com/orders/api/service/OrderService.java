@@ -1,6 +1,8 @@
 package com.orders.api.service;
 
 import com.orders.api.dto.CreateOrderDto;
+import com.orders.api.dto.OrderItemResponse;
+import com.orders.api.dto.OrderResponse;
 import com.orders.api.entity.Order;
 import com.orders.api.entity.OrderItem;
 import com.orders.api.entity.Product;
@@ -8,17 +10,19 @@ import com.orders.api.enums.OrderStatus;
 import com.orders.api.repository.OrderRepository;
 import com.orders.api.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Classe de serviço responsável por gerenciar as operações relacionadas a Pedidos.
  *
- * Autor: Pierri Alexander Vidmar
- * Desde: 05/2025
+ * Author: Pierri Alexander Vidmar
+ * Since: 05/2025
  */
 @Service
 public class OrderService {
@@ -28,6 +32,14 @@ public class OrderService {
 
     @Autowired
     private final ProductRepository productRepository;
+
+    public List<OrderResponse> findAll() {
+        return orderRepository.findAllWithItems()
+                .stream()
+                .map(order -> mapToResponse(order))
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Construtor para injeção de dependências.
@@ -45,18 +57,17 @@ public class OrderService {
      * Associa os produtos aos itens do pedido e calcula o valor total.
      *
      * @param dto Objeto contendo os itens do pedido.
-     * @param clientId ID do cliente que está realizando o pedido.
      * @return O pedido criado e persistido.
      * @throws RuntimeException Se algum produto informado não for encontrado.
      */
-    public Order create(CreateOrderDto dto, Long clientId) {
+    public Order create(CreateOrderDto dto) {
         Order order = new Order();
-        order.setClientId(clientId);
+        order.setClientId(dto.getClientId());
 
         List<OrderItem> items = dto.getItems().stream().map(input -> {
             OrderItem item = new OrderItem();
 
-            Product product = productRepository.findById(UUID.fromString(input.getProductId()))
+            Product product = productRepository.findById(input.getProductId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + input.getProductId()));
 
             item.setProduct(product);
@@ -81,7 +92,7 @@ public class OrderService {
      * @throws IllegalStateException Se o pedido não estiver no status PENDING.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
-    public Order pay(UUID orderId) {
+    public Order pay(String orderId) {
         Order order = findById(orderId);
         if(order.getStatus() != OrderStatus.PENDING){
             throw new IllegalStateException("O pedido não pode ser pago");
@@ -99,7 +110,7 @@ public class OrderService {
      * @throws IllegalStateException Se o pedido não estiver no status PENDING.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
-    public Order fail(UUID orderId) {
+    public Order fail(String orderId) {
         Order order = findById(orderId);
         if(order.getStatus() != OrderStatus.PENDING){
             throw new IllegalStateException("O pedido não pode ser marcado como falhado");
@@ -115,8 +126,33 @@ public class OrderService {
      * @return O pedido encontrado.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
-    public Order findById(UUID id) {
+    public Order findById(String id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado"));
+    }
+
+
+    private OrderResponse mapToResponse(Order order) {
+        OrderResponse response = new OrderResponse();
+        response.setId(order.getId());
+        response.setClientId(order.getClientId());
+        response.setTotal(order.getTotal());
+        response.setCreatedAt(order.getCreatedAt());
+
+        List<OrderItemResponse> items = order.getItems().stream()
+                .map(this::mapToItemResponse)
+                .collect(Collectors.toList());
+
+        response.setItems(items);
+        return response;
+    }
+
+    private OrderItemResponse mapToItemResponse(OrderItem item) {
+        OrderItemResponse response = new OrderItemResponse();
+        response.setId(item.getId());
+        response.setQuantity(item.getQuantity());
+        response.setPrice(item.getPrice());
+        response.setProductId(item.getProduct().getId());
+        return response;
     }
 }

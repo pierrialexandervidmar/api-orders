@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -30,12 +29,12 @@ public class ProductService {
     }
 
     // FIND ONE
-    public Optional<Product> findOne(UUID id) {
+    public Optional<Product> findOne(String id) {
         return productRepository.findById(id);
     }
 
     // UPDATE
-    public Product update(UUID id, Product updateProductDto) {
+    public Product update(String id, Product updateProductDto) {
         return productRepository.findById(id).map(product -> {
             // Aqui você atualiza os campos desejados manualmente
             product.setName(updateProductDto.getName());
@@ -46,7 +45,7 @@ public class ProductService {
     }
 
     // DELETE
-    public void remove(UUID id) {
+    public void remove(String id) {
         productRepository.deleteById(id);
     }
 }
