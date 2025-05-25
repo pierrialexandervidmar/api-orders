@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtService {
 
     private final String SECRET_KEY = "r@nd0mS3cr3tK3y!MuitoMaisSegura123456!";
-
+    private final long EXPIRATION_MILLIS = 1000 * 60 * 60;
 
     public String generateToken(User user) {
         return Jwts.builder()
@@ -23,6 +23,10 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hora
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public long getExpirationTimestamp() {
+        return System.currentTimeMillis() + EXPIRATION_MILLIS;
     }
 
     public String extractUsername(String token) {

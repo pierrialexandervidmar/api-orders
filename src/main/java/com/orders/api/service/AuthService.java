@@ -1,6 +1,7 @@
 package com.orders.api.service;
 
 import com.orders.api.dto.AuthRequest;
+import com.orders.api.dto.AuthResponse;
 import com.orders.api.dto.RegisterRequest;
 import com.orders.api.entity.User;
 import com.orders.api.repository.UserRepository;
@@ -18,7 +19,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public String register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Usuário já cadastrado.");
@@ -31,10 +32,14 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-        return jwtService.generateToken(user);
+
+        String token = jwtService.generateToken(user);
+        Long expiresAtTimestamp = jwtService.getExpirationTimestamp();
+
+        return new AuthResponse(token, expiresAtTimestamp);
     }
 
-    public String authenticate(AuthRequest request) {
+    public AuthResponse authenticate(AuthRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
@@ -42,7 +47,9 @@ public class AuthService {
             throw new BadCredentialsException("Credenciais inválidas");
         }
 
-        return jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
+        Long expiresAt = jwtService.getExpirationTimestamp();
+        return new AuthResponse(token, expiresAt);
     }
 }
 
