@@ -30,6 +30,11 @@ public class OrderResource {
     public List<OrderResponse> findAll() {
         return orderService.findAll();
     }
+
+    @GetMapping("/client/{id}")
+    public List<OrderResponse> findByClientId(@PathVariable String id) {
+        return orderService.findByClientId(id);
+    }
 //
 //    @GetMapping("/{id}")
 //    public Order findOne(@PathVariable UUID id) {

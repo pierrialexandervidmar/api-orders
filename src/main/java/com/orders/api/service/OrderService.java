@@ -33,14 +33,6 @@ public class OrderService {
     @Autowired
     private final ProductRepository productRepository;
 
-    public List<OrderResponse> findAll() {
-        return orderRepository.findAllWithItems()
-                .stream()
-                .map(order -> mapToResponse(order))
-                .collect(Collectors.toList());
-    }
-
-
     /**
      * Construtor para injeção de dependências.
      *
@@ -50,6 +42,14 @@ public class OrderService {
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+    }
+
+
+    public List<OrderResponse> findAll() {
+        return orderRepository.findAllWithItems()
+                .stream()
+                .map(order -> mapToResponse(order))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -130,6 +130,35 @@ public class OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado"));
     }
+
+    /**
+     * Busca um pedido pelo seu UUID.
+     *
+     * @param id UUID do pedido.
+     * @return O pedido encontrado.
+     * @throws EntityNotFoundException Se o pedido não for encontrado.
+     */
+    public List<OrderResponse> findByClientId(String id) {
+
+        List<Order> orders = orderRepository.findByClientId(id);
+
+        if (orders.isEmpty()) {
+            throw new EntityNotFoundException("Nenhum pedido encontrado para o cliente com ID: " + id);
+        }
+
+        // Converter cada Order para OrderResponse
+        return orders.stream()
+                .map(order -> {
+                    OrderResponse response = new OrderResponse();
+                    response.setId(order.getId());
+                    response.setClientId(order.getClientId());
+                    response.setTotal(order.getTotal());
+                    response.setCreatedAt(order.getCreatedAt());
+                    return response;
+                })
+                .toList();
+    }
+
 
 
     private OrderResponse mapToResponse(Order order) {
